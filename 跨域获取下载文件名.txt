@@ -1,0 +1,7 @@
+--问题描述：
+跨域情况下使用fetch api下载文件
+const filename = response.headers.get('Content-Disposition');
+获取的文件名为null
+--解决方案
+后端在response header加上Access-Control-Expose-Headers：Content-Disposition
+这样就可以获取到这个字段了
