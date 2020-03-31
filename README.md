@@ -39,3 +39,28 @@ script.onload = script.onreadystatechange = function() {
 ```
 
 - IE678 window == document为true,document == window竟然为false的神奇特性
+- fix ios 设备滑动不流畅问题
+  ```
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 1; /* fix 滑动几次后可滚动区域会卡住的问题*/
+  ```
+- fix android 手机输入法挡住输入框问题
+```
+    function androidInputBugFix(){
+        // .container 设置了 overflow 属性, 导致 Android 手机下输入框获取焦点时, 输入法挡住输入框的 bug
+        // 相关 issue: https://github.com/weui/weui/issues/15
+        // 解决方法:
+        // 0. .container 去掉 overflow 属性, 但此 demo 下会引发别的问题
+        // 1. 参考 http://stackoverflow.com/questions/23757345/android-does-not-correctly-scroll-on-input-focus-if-not-body-element
+        //    Android 手机下, input 或 textarea 元素聚焦时, 主动滚一把
+        if (/Android/gi.test(navigator.userAgent)) {
+            window.addEventListener('resize', function () {
+                if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+                    window.setTimeout(function () {
+                        document.activeElement.scrollIntoViewIfNeeded();
+                    }, 0);
+                }
+            })
+        }
+ ```
